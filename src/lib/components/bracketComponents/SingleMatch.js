@@ -30,6 +30,7 @@ function SingleMatch({
   roundCount,
   index,
   hidePKs,
+  fontSize,
 }) {
   const teamOrder = flipTeams ? ["away", "home"] : ["home", "away"];
   const transform = `translate(${placement.X}, ${placement.Y})`;
@@ -75,7 +76,7 @@ function SingleMatch({
                 textAnchor={textAnchor}
                 width={width}
                 height={matchHeight}
-                onSelectMatch={onSelectMatch ? onSelectMatch : null}
+                onSelectMatch={onSelectMatch}
                 dateTimeFormatter={dateTimeFormatter}
                 displayMatchNumber={displayMatchNumber}
                 textColor={textColor}

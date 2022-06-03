@@ -1,8 +1,8 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
-import { Text } from "react-native-svg";
+import { StyleSheet } from "react-native";
+import { Text, Symbol } from "react-native-svg";
 
-import AppText from "../AppText";
+import { defaultTextColor } from "../../utils/defaultStyles";
 
 function CLinkSvg({
   x,
@@ -14,22 +14,23 @@ function CLinkSvg({
   boldText,
   children,
   testID,
-  transform,
+  fontSize,
 }) {
+  const testTap = () => {
+    console.log(children);
+  };
   return (
     <Text
-      transform={transform}
-      onClick={!clickHandler ? () => {} : clickHandler}
-      style={{ fontWeight: "bold" }}
+      onPress={testTap}
+      onResponderMove={() => {}}
+      style={{ fontWeight: boldText ? "bold" : "normal" }}
       data-testid={testID}
+      x={x}
+      y={y}
+      fill={style?.fill || defaultTextColor}
+      fontSize={fontSize}
     >
-      <AppText
-        style={{
-          fontWeight: boldText ? "bold" : "normal",
-        }}
-      >
-        {children}
-      </AppText>
+      {children}
     </Text>
   );
 }

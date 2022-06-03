@@ -158,7 +158,10 @@ function SingleTeam({
   const highlight = match.highlight?.includes(team);
 
   return (
-    <G data-testid="single-team">
+    <G
+      data-testid="single-team"
+      onPress={onSelectTeam ? () => onSelectTeam(match, team) : () => {}}
+    >
       {highlight && (
         <Rect
           width={width - offsets.text - offsets.lines}

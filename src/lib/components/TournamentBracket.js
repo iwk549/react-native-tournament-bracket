@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Dimensions, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Dimensions,
+  ScrollView,
+  Animated,
+  TouchableOpacity,
+} from "react-native";
 import Svg, { G } from "react-native-svg";
+import { PinchGestureHandler } from "react-native-gesture-handler";
 
-import { offsets, separateAndSplit, getRounds } from "../utils/bracketUtils";
+import { separateAndSplit } from "../utils/bracketUtils";
 import {
   defaultBackgroundColor,
   defaultHighlight,
@@ -45,14 +53,26 @@ function TournamentBracket({
 
   useEffect(() => {
     const newMatchHeight =
-      matchHeight || (orientation === "portrait" ? 75 : 100);
+      matchHeight || (orientation === "portrait" ? 100 : 100);
     setBracketSize({
       width: width || 1200,
       height: height || 720,
       matchHeight: newMatchHeight,
-      fontSize: newMatchHeight * 0.6,
+      fontSize: newMatchHeight * 0.16,
     });
   }, [orientation, width, height, matchHeight]);
+
+  // ! start pinching code
+
+  const handleStateChange = (event) => {
+    console.log("state changed");
+  };
+
+  const onPinch = (event) => {
+    console.log("pinched");
+  };
+
+  // ! end pinching code
 
   const allRounds = {
     main: [
@@ -94,126 +114,144 @@ function TournamentBracket({
     remainingBracketSize.height = remainingBracketSize.height - heightOffset;
 
     return (
-      <Svg
-        height={bracketSize.height}
-        width={bracketSize.width}
-        // viewBox="0 0 100 100"
-        style={{
-          backgroundColor: backgroundColor || defaultBackgroundColor,
-          borderRadius: 5,
-          border: `1px solid ${popColor || defaultPopColor}`,
-        }}
+      <TouchableOpacity
+        activeOpacity={0.5}
+        onPress={(event) => console.log(event.nativeEvent)}
       >
-        {bracket.map((roundMatches, i) => {
-          let X = (i * remainingBracketSize.width) / bracket.length;
+        <Svg
+          height={bracketSize.height}
+          width={bracketSize.width}
+          // viewBox="0 0 100 100"
+          style={{
+            backgroundColor: backgroundColor || defaultBackgroundColor,
+            borderRadius: 5,
+            border: `1px solid ${popColor || defaultPopColor}`,
+          }}
+          // onPress={(event) => console.log(event.nativeEvent)}
+        >
+          {bracket.map((roundMatches, i) => {
+            let X = (i * remainingBracketSize.width) / bracket.length;
 
-          return roundMatches.map((m, ii) => {
-            const blockStart =
-              (ii * remainingBracketSize.height) / roundMatches.length +
-              heightOffset;
-            const blockEnd =
-              ((ii + 1) * remainingBracketSize.height) / roundMatches.length +
-              heightOffset;
-            let Y = {
-              start: blockStart,
-              end: blockEnd,
-            };
+            return roundMatches.map((m, ii) => {
+              const blockStart =
+                (ii * remainingBracketSize.height) / roundMatches.length +
+                heightOffset;
+              const blockEnd =
+                ((ii + 1) * remainingBracketSize.height) / roundMatches.length +
+                heightOffset;
+              let Y = {
+                start: blockStart,
+                end: blockEnd,
+              };
 
-            const bracketEnd =
-              ii === 0
-                ? "top"
-                : ii === roundMatches.length - 1
-                ? "bottom"
-                : "middle";
-            const isFinal = m.round === getRounds().final;
-            const isSemiFinal =
-              m.round === getRounds().semi && orientation === "landscape";
-            const textAnchor =
-              orientation === "portrait"
-                ? "start"
-                : isFinal
-                ? "middle"
-                : i < bracket.length / 2
-                ? "start"
-                : "end";
-            Y =
-              isFinal && orientation === "landscape"
-                ? {
-                    start: remainingBracketSize.height / 2,
-                    end:
-                      remainingBracketSize.height / 2 -
-                      bracketSize.height / 2 +
-                      100,
-                  }
-                : Y;
-            const yMatchStart =
-              (Y.end - Y.start) / 2 - bracketSize.matchHeight / 2 + Y.start;
-            const matchWidth = remainingBracketSize.width / bracket.length;
+              const bracketEnd =
+                ii === 0
+                  ? "top"
+                  : ii === roundMatches.length - 1
+                  ? "bottom"
+                  : "middle";
+              const isFinal = m.round === getRounds().final;
+              const isSemiFinal =
+                m.round === getRounds().semi && orientation === "landscape";
+              const textAnchor =
+                orientation === "portrait"
+                  ? "start"
+                  : isFinal
+                  ? "middle"
+                  : i < bracket.length / 2
+                  ? "start"
+                  : "end";
+              Y =
+                isFinal && orientation === "landscape"
+                  ? {
+                      start: remainingBracketSize.height / 2,
+                      end:
+                        remainingBracketSize.height / 2 -
+                        bracketSize.height / 2 +
+                        100,
+                    }
+                  : Y;
+              const yMatchStart =
+                (Y.end - Y.start) / 2 - bracketSize.matchHeight / 2 + Y.start;
+              const matchWidth = remainingBracketSize.width / bracket.length;
 
-            return (
-              <G key={matchKeyCreator(m)}>
-                <SingleMatch
-                  match={m}
-                  textAnchor={textAnchor}
-                  width={matchWidth}
-                  placement={{ X, Y: yMatchStart }}
-                  bracketEnd={bracketEnd}
-                  isSemiFinal={isSemiFinal}
-                  isFinal={isFinal}
-                  matchHeight={bracketSize.matchHeight}
-                  onSelectMatch={onSelectMatch}
-                  onSelectTeam={onSelectTeam}
-                  showFullTeamNames={showFullTeamNames}
-                  flipTeams={flipTeams}
-                  textColor={textColor}
-                  backgroundColor={backgroundColor}
-                  popColor={popColor}
-                  dateTimeFormatter={dateTimeFormatter}
-                  lineColor={lineColor}
-                  displayMatchNumber={displayMatchNumber}
-                  roundCount={roundMatches.length}
-                  index={ii}
-                  hidePKs={hidePKs}
-                  highlightColor={highlightColor}
-                  fontSize={bracketSize.fontSize}
-                />
-                <MatchConnector
-                  position={{
-                    X,
-                    Y: {
-                      matchStart: yMatchStart,
-                      matchEnd: yMatchStart + bracketSize.matchHeight,
-                      blockStart,
-                      blockEnd,
-                    },
-                  }}
-                  matchHeight={matchHeight}
-                  width={matchWidth}
-                  textAnchor={textAnchor}
-                  isSemiFinal={isSemiFinal}
-                  isFinal={isFinal}
-                  orientation={orientation}
-                  bracketEnd={bracketEnd}
-                  isOnlyMatch={roundMatches.length === 1}
-                  backgroundColor={backgroundColor}
-                  textColor={textColor}
-                  popColor={popColor}
-                  lineColor={lineColor}
-                  isDummy={m.dummyMatch}
-                  roundCount={roundMatches.length}
-                  index={ii}
-                  fontSize={bracketSize.fontSize}
-                />
-              </G>
-            );
-          });
-        })}
-      </Svg>
+              return (
+                <G key={matchKeyCreator(m)}>
+                  <SingleMatch
+                    match={m}
+                    textAnchor={textAnchor}
+                    width={matchWidth}
+                    placement={{ X, Y: yMatchStart }}
+                    bracketEnd={bracketEnd}
+                    isSemiFinal={isSemiFinal}
+                    isFinal={isFinal}
+                    matchHeight={bracketSize.matchHeight}
+                    onSelectMatch={onSelectMatch}
+                    onSelectTeam={onSelectTeam}
+                    showFullTeamNames={showFullTeamNames}
+                    flipTeams={flipTeams}
+                    textColor={textColor}
+                    backgroundColor={backgroundColor}
+                    popColor={popColor}
+                    dateTimeFormatter={dateTimeFormatter}
+                    lineColor={lineColor}
+                    displayMatchNumber={displayMatchNumber}
+                    roundCount={roundMatches.length}
+                    index={ii}
+                    hidePKs={hidePKs}
+                    highlightColor={highlightColor}
+                    fontSize={bracketSize.fontSize}
+                  />
+                  <MatchConnector
+                    position={{
+                      X,
+                      Y: {
+                        matchStart: yMatchStart,
+                        matchEnd: yMatchStart + bracketSize.matchHeight,
+                        blockStart,
+                        blockEnd,
+                      },
+                    }}
+                    matchHeight={matchHeight}
+                    width={matchWidth}
+                    textAnchor={textAnchor}
+                    isSemiFinal={isSemiFinal}
+                    isFinal={isFinal}
+                    orientation={orientation}
+                    bracketEnd={bracketEnd}
+                    isOnlyMatch={roundMatches.length === 1}
+                    backgroundColor={backgroundColor}
+                    textColor={textColor}
+                    popColor={popColor}
+                    lineColor={lineColor}
+                    isDummy={m.dummyMatch}
+                    roundCount={roundMatches.length}
+                    index={ii}
+                    fontSize={bracketSize.fontSize}
+                  />
+                </G>
+              );
+            });
+          })}
+        </Svg>
+      </TouchableOpacity>
     );
   };
 
+  //   return (
+  //     <PinchGestureHandler
+  //       onGestureEvent={onPinch}
+  //       onHandlerStateChange={handleStateChange}
+  //       enabled={true}
+  //     >
+  //       <View style={{ height: 500, width: 500, backgroundColor: "green" }} />
+  //     </PinchGestureHandler>
+  //   );
   return (
-    <ScrollView style={styles.verticalScroll}>
+    <ScrollView
+      style={styles.verticalScroll}
+      onPinch={() => console.log("pinched")}
+    >
       <ScrollView horizontal={true} style={styles.horizontalScroll}>
         {renderBracket()}
       </ScrollView>
