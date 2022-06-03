@@ -20,6 +20,7 @@ function MatchLink({
   displayMatchNumber,
   textColor,
   highlightColor,
+  fontSize,
 }) {
   const X = getTextX(textAnchor, width);
 
@@ -29,6 +30,15 @@ function MatchLink({
 
   const highlight = match.highlight?.includes("match");
   const Y = getTeamNameYPlacement(0, height);
+
+  const getLineText = () => {
+    if (match.dummyMatch) return "";
+    return `${
+      displayMatchNumber
+        ? "#" + (match.metadata?.matchNumber || match.matchNumber) + ": "
+        : ""
+    }${dateTimeFormatter ? dateTimeFormatter(match.dateTime) : ""}`;
+  };
 
   return (
     <>
@@ -59,15 +69,9 @@ function MatchLink({
         }}
         clickHandler={onSelectMatch}
         testID="match-link-text"
+        fontSize={fontSize}
       >
-        {match.dummyMatch ? (
-          ""
-        ) : (
-          <>
-            {matchNumber}{" "}
-            {dateTimeFormatter ? dateTimeFormatter(match.dateTime) : null}
-          </>
-        )}
+        {getLineText()}
       </CLinkSvg>
     </>
   );

@@ -40,13 +40,17 @@ function TournamentBracket({
     width: screenWidth,
     height: screenHeight,
     matchHeight: 100,
+    fontSize: 12,
   });
 
   useEffect(() => {
+    const newMatchHeight =
+      matchHeight || (orientation === "portrait" ? 75 : 100);
     setBracketSize({
       width: width || 1200,
       height: height || 720,
-      matchHeight: matchHeight || (orientation === "portrait" ? 75 : 100),
+      matchHeight: newMatchHeight,
+      fontSize: newMatchHeight * 0.6,
     });
   }, [orientation, width, height, matchHeight]);
 
@@ -171,6 +175,7 @@ function TournamentBracket({
                   index={ii}
                   hidePKs={hidePKs}
                   highlightColor={highlightColor}
+                  fontSize={bracketSize.fontSize}
                 />
                 <MatchConnector
                   position={{
@@ -197,6 +202,7 @@ function TournamentBracket({
                   isDummy={m.dummyMatch}
                   roundCount={roundMatches.length}
                   index={ii}
+                  fontSize={bracketSize.fontSize}
                 />
               </G>
             );

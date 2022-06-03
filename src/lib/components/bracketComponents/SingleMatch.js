@@ -67,7 +67,7 @@ function SingleMatch({
               index={index}
               hidePKs={hidePKs}
               highlightColor={highlightColor}
-              transform={transform}
+              fontSize={fontSize}
             />
             {i === 0 && (
               <MatchLink
@@ -80,6 +80,7 @@ function SingleMatch({
                 displayMatchNumber={displayMatchNumber}
                 textColor={textColor}
                 highlightColor={highlightColor}
+                fontSize={fontSize}
               />
             )}
           </React.Fragment>

@@ -31,7 +31,7 @@ function SingleTeam({
   roundCount,
   index,
   hidePKs,
-  transform,
+  fontSize,
 }) {
   const [showTooltip, setShowTooltip] = useState({ show: false, label: "" });
   const Y = getTeamNameYPlacement(verticalPosition, height);
@@ -125,6 +125,7 @@ function SingleTeam({
     : false;
 
   const getLineText = () => {
+    if (match.dummyMatch) return "";
     const teamName = match[team + "TeamName"];
     if (!teamName)
       throw new Error(
@@ -204,9 +205,9 @@ function SingleTeam({
         boldText={isWinner}
         clickHandler={onSelectTeam ? () => onSelectTeam(match, team) : null}
         testID="team-name-text"
-        transform={transform}
+        fontSize={fontSize}
       >
-        {match.dummyMatch ? "" : getLineText()}
+        {getLineText()}
       </CLinkSvg>
       {renderUnderline()}
       {renderJoinLine()}

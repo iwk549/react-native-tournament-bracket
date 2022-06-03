@@ -16,7 +16,6 @@ function CLinkSvg({
   testID,
   transform,
 }) {
-  console.log("clink", transform);
   return (
     <Text
       transform={transform}
