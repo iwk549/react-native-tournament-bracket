@@ -1,0 +1,16 @@
+{
+  "name": "react-native-tournament-bracket",
+  "version": "1.0.0",
+  "description": "Tournament Bracket for Mobile",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "tournament",
+    "bracket",
+    "sports"
+  ],
+  "author": "Ian Kendall",
+  "license": "MIT"
+}
