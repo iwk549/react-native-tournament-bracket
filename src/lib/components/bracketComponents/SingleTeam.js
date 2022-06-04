@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Image } from "react-native";
-import { Rect, G, Line } from "react-native-svg";
+import { Rect, G, Line, Image } from "react-native-svg";
 
 import {
   getTeamNameYPlacement,
@@ -8,7 +7,12 @@ import {
   offsets,
   getLineX,
 } from "../../utils/bracketUtils";
-import { defaultTextColor, defaultPopColor } from "../../utils/defaultStyles";
+import {
+  defaultTextColor,
+  defaultPopColor,
+  defaultHighlight,
+  defaultBackgroundColor,
+} from "../../utils/defaultStyles";
 import CLinkSvg from "./CLinkSvg";
 
 function SingleTeam({
@@ -32,6 +36,7 @@ function SingleTeam({
   index,
   hidePKs,
   fontSize,
+  isTapped,
 }) {
   const [showTooltip, setShowTooltip] = useState({ show: false, label: "" });
   const Y = getTeamNameYPlacement(verticalPosition, height);
@@ -158,25 +163,28 @@ function SingleTeam({
   const highlight = match.highlight?.includes(team);
 
   return (
-    <G onPressOut={() => onSelectTeam(match, team)} onResponderMove={() => {}}>
-      {highlight && (
-        <Rect
-          width={width - offsets.text - offsets.lines}
-          height={height / 5 - 4}
-          rx={5}
-          style={{
-            fill:
-              highlightColor?.backgroundColor ||
-              defaultHighlight.backgroundColor,
-          }}
-          transform={`translate(${offsets.lines}, ${
-            verticalPosition === 0
-              ? y1 + offsets.pixels - height / 5
-              : y2 + offsets.pixels
-          })`}
-          data-testid="team-highlight"
-        />
-      )}
+    <G>
+      <Rect
+        width={width - offsets.text - offsets.lines}
+        height={height / 5 - 4}
+        rx={5}
+        style={{
+          fill: highlight
+            ? highlightColor?.backgroundColor ||
+              defaultHighlight.backgroundColor
+            : backgroundColor || defaultBackgroundColor,
+        }}
+        stroke={
+          isTapped ? highlightColor || defaultHighlight.backgroundColor : "none"
+        }
+        fillOpacity={isTapped ? 0.5 : 1}
+        transform={`translate(${offsets.lines}, ${
+          verticalPosition === 0
+            ? y1 + offsets.pixels - height / 5
+            : y2 + offsets.pixels
+        })`}
+        data-testid="team-highlight"
+      />
       <CLinkSvg
         x={
           X +
@@ -188,6 +196,7 @@ function SingleTeam({
               : 0
             : 0)
         }
+        textAnchor={textAnchor}
         y={verticalPosition === 0 ? y1 - height / 20 : Y - height / 20}
         style={{
           textAnchor,
@@ -211,7 +220,7 @@ function SingleTeam({
       </CLinkSvg>
       {renderUnderline()}
       {renderJoinLine()}
-      {/* {hasLogo ? (
+      {hasLogo ? (
         <Image
           href={match[team + "TeamLogo"]}
           x={
@@ -232,13 +241,9 @@ function SingleTeam({
           width={height / 5}
           height={height / 5}
         />
-      )} */}
+      )}
     </G>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {},
-});
 
 export default SingleTeam;

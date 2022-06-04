@@ -80,9 +80,21 @@ export const getTeamNameYPlacement = (verticalPosition, height) => {
   return verticalPosition === 0 ? height / 3 : (height * 4) / 5;
 };
 
-export const matchHeight = 100;
+export const defaultMatchHeight = 100;
+
+export const linkHeight = (matchHeight) => {
+  return matchHeight / 4 + (matchHeight * 0.02 - 9.5);
+};
 
 export const getFinalRound = (bracket) => {
   if (bracket.length === 0) return 0;
   return Math.max(...bracket.map((m) => m.round));
+};
+
+export const teamOrder = (flipTeams) => {
+  return flipTeams ? ["away", "home"] : ["home", "away"];
+};
+
+export const checkZoomLevel = (zoom) => {
+  return zoom >= 0.5 && zoom <= 3;
 };

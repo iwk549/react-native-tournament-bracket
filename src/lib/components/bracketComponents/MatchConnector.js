@@ -1,6 +1,5 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
-import Svg, { G, Rect, Line } from "react-native-svg";
+import { G, Rect, Line } from "react-native-svg";
 
 import {
   defaultBackgroundColor,
@@ -85,9 +84,5 @@ function MatchConnector({
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {},
-});
 
 export default MatchConnector;

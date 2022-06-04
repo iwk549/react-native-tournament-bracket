@@ -1,10 +1,10 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
 import { Rect, G } from "react-native-svg";
 
 import SingleTeam from "./SingleTeam";
 import MatchLink from "./MatchLink";
 import { defaultBackgroundColor } from "../../utils/defaultStyles";
+import { teamOrder } from "../../utils/bracketUtils";
 
 function SingleMatch({
   match,
@@ -31,8 +31,9 @@ function SingleMatch({
   index,
   hidePKs,
   fontSize,
+  tappedMatch,
+  matchKey,
 }) {
-  const teamOrder = flipTeams ? ["away", "home"] : ["home", "away"];
   const transform = `translate(${placement.X}, ${placement.Y})`;
 
   return (
@@ -44,7 +45,7 @@ function SingleMatch({
           fill: backgroundColor || defaultBackgroundColor,
         }}
       />
-      {teamOrder.map((t, i) => {
+      {teamOrder(flipTeams).map((t, i) => {
         return (
           <React.Fragment key={t}>
             <SingleTeam
@@ -70,6 +71,9 @@ function SingleMatch({
               highlightColor={highlightColor}
               fontSize={fontSize}
               placement={placement}
+              isTapped={
+                tappedMatch?.key === matchKey && tappedMatch?.selected === i
+              }
             />
             {i === 0 && (
               <MatchLink
@@ -82,7 +86,11 @@ function SingleMatch({
                 displayMatchNumber={displayMatchNumber}
                 textColor={textColor}
                 highlightColor={highlightColor}
+                backgroundColor={backgroundColor}
                 fontSize={fontSize}
+                isTapped={
+                  tappedMatch?.key === matchKey && tappedMatch?.selected === -1
+                }
               />
             )}
           </React.Fragment>
@@ -91,9 +99,5 @@ function SingleMatch({
     </G>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {},
-});
 
 export default SingleMatch;

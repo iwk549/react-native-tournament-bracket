@@ -7,13 +7,12 @@ import { defaultTextColor } from "../../utils/defaultStyles";
 function CLinkSvg({
   x,
   y,
-  onMouseOver,
-  onMouseOut,
   style,
   boldText,
   children,
   testID,
   fontSize,
+  textAnchor,
 }) {
   return (
     <Text
@@ -24,6 +23,7 @@ function CLinkSvg({
       y={y}
       fill={style?.fill || defaultTextColor}
       fontSize={fontSize}
+      textAnchor={textAnchor}
     >
       {children}
     </Text>
