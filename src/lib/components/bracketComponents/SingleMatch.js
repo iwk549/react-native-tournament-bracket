@@ -69,6 +69,7 @@ function SingleMatch({
               hidePKs={hidePKs}
               highlightColor={highlightColor}
               fontSize={fontSize}
+              placement={placement}
             />
             {i === 0 && (
               <MatchLink

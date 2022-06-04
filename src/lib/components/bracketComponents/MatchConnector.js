@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { G, Rect, Line } from "react-native-svg";
+import Svg, { G, Rect, Line } from "react-native-svg";
 
 import {
   defaultBackgroundColor,

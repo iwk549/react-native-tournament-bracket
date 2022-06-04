@@ -10,18 +10,13 @@ function CLinkSvg({
   onMouseOver,
   onMouseOut,
   style,
-  clickHandler,
   boldText,
   children,
   testID,
   fontSize,
 }) {
-  const testTap = () => {
-    console.log(children);
-  };
   return (
     <Text
-      onPress={testTap}
       onResponderMove={() => {}}
       style={{ fontWeight: boldText ? "bold" : "normal" }}
       data-testid={testID}

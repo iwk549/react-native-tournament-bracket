@@ -1,6 +1,6 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
-import { Rect } from "react-native-svg";
+import { StyleSheet, TouchableOpacity } from "react-native";
+import { Rect, G } from "react-native-svg";
 
 import CLinkSvg from "./CLinkSvg";
 import {
@@ -41,7 +41,7 @@ function MatchLink({
   };
 
   return (
-    <>
+    <G onPressOut={onSelectMatch ? () => onSelectMatch(match) : () => {}}>
       {highlight && (
         <Rect
           width={width - offsets.text - offsets.lines}
@@ -67,13 +67,12 @@ function MatchLink({
             ? highlightColor?.color || defaultHighlight.color
             : textColor || defaultTextColor,
         }}
-        clickHandler={onSelectMatch}
         testID="match-link-text"
         fontSize={fontSize}
       >
         {getLineText()}
       </CLinkSvg>
-    </>
+    </G>
   );
 }
 
