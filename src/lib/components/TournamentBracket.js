@@ -3,7 +3,6 @@ import { StyleSheet, Dimensions, ScrollView } from "react-native";
 import Svg, { G } from "react-native-svg";
 import {
   PinchGestureHandler,
-  State,
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
 
@@ -45,6 +44,8 @@ function TournamentBracket({
   hidePKs,
   matchKeyCreator = (m) => `${m.round}${m.matchNumber}`,
   manualZoom,
+  setManualZoom,
+  allowPinch = true,
 }) {
   const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
   const [bracket, setBracket] = useState([]);
@@ -56,7 +57,7 @@ function TournamentBracket({
     matchHeight: defaultMatchHeight,
     fontSize: defaultMatchHeight * 0.16,
   });
-  const [zoom, setZoom] = useState(manualZoom || 1);
+  const [zoom, setZoom] = useState(1);
 
   useEffect(() => {
     const newMatchHeight = matchHeight || defaultMatchHeight;
@@ -70,7 +71,7 @@ function TournamentBracket({
   }, [orientation, width, height, matchHeight, zoom]);
 
   useEffect(() => {
-    if (checkZoomLevel(manualZoom)) setZoom(manualZoom || 1);
+    if (checkZoomLevel(manualZoom)) setZoom(manualZoom);
   }, [manualZoom]);
 
   useEffect(() => {
@@ -167,10 +168,6 @@ function TournamentBracket({
       }
     }
     handleSvgPressOut();
-  };
-
-  const handleSvgLongPress = (event) => {
-    if (!onSelectMatchLongPress && !onSelectTeamLongPress) return;
   };
 
   const handleSvgPressIn = (event) => {
@@ -337,9 +334,14 @@ function TournamentBracket({
   };
 
   const onPinch = ({ nativeEvent }) => {
-    // check for min and max zoom
-    const newZoom = nativeEvent.scale * zoom;
-    if (checkZoomLevel(newZoom)) setZoom(newZoom);
+    if (allowPinch) {
+      // check for min and max zoom
+      const newZoom = nativeEvent.scale * zoom;
+      if (checkZoomLevel(newZoom)) {
+        if (setManualZoom) setManualZoom(newZoom);
+        setZoom(newZoom);
+      }
+    }
   };
 
   return (
