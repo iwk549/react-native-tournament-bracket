@@ -1,6 +1,6 @@
 {
   "name": "react-native-tournament-bracket",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Tournament Bracket for Mobile",
   "main": "dist/index.js",
   "scripts": {
@@ -13,7 +13,8 @@
     "sports"
   ],
   "dependencies": {
-    "react-native-gesture-handler": "~2.2.1"
+    "react-native-gesture-handler": "~2.2.1",
+    "react-native-svg": "12.3.0"
   },
   "author": "Ian Kendall",
   "license": "MIT",
