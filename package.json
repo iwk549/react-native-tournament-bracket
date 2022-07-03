@@ -1,6 +1,6 @@
 {
   "name": "react-native-tournament-bracket",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Tournament Bracket for Mobile",
   "main": "dist/index.js",
   "scripts": {
