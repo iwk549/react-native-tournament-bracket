@@ -13,8 +13,8 @@
     "sports"
   ],
   "dependencies": {
-    "react-native-gesture-handler": "~2.2.1",
-    "react-native-svg": "12.3.0"
+    "react-native-gesture-handler": "^2.2.1",
+    "react-native-svg": "^12.3.0"
   },
   "author": "Ian Kendall",
   "license": "MIT",

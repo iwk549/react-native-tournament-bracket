@@ -107,7 +107,7 @@ function TournamentBracket({
     main: [
       ...new Set(
         matches
-          .filter((m) => m.round > 0 && m.round <= 10)
+          .filter((m) => m.round < 99)
           .map((m) => m.round)
           .sort((a, b) => a - b)
       ),
@@ -152,19 +152,21 @@ function TournamentBracket({
       );
       if (currentlyTappedMatch) {
         if (selected === -1) {
-          if (type === "short") return onSelectMatch(currentlyTappedMatch[1]);
-          else if (onSelectMatchLongPress)
-            return onSelectMatchLongPress(currentlyTappedMatch[1]);
-        } else if (type === "short" && onSelectTeam)
-          return onSelectTeam(
-            currentlyTappedMatch[1],
-            teamOrder(flipTeams)[selected]
-          );
-        else if (onSelectTeamLongPress)
-          return onSelectTeamLongPress(
-            currentlyTappedMatch[1],
-            teamOrder(flipTeams)[selected]
-          );
+          if (type === "short")
+            if (onSelectMatch) return onSelectMatch(currentlyTappedMatch[1]);
+            else if (onSelectMatchLongPress)
+              return onSelectMatchLongPress(currentlyTappedMatch[1]);
+        } else if (type === "short")
+          if (onSelectTeam)
+            return onSelectTeam(
+              currentlyTappedMatch[1],
+              teamOrder(flipTeams)[selected]
+            );
+          else if (onSelectTeamLongPress)
+            return onSelectTeamLongPress(
+              currentlyTappedMatch[1],
+              teamOrder(flipTeams)[selected]
+            );
       }
     }
     handleSvgPressOut();
@@ -175,12 +177,18 @@ function TournamentBracket({
       event.nativeEvent.locationX,
       event.nativeEvent.locationY
     );
-    if (currentlyTappedMatch) {
-      setTappedMatch({
-        key: matchKeyCreator(currentlyTappedMatch[1]),
-        selected,
-      });
-    } else handleSvgPressOut();
+
+    // if functions are not set for selecting team/match do not set as pressed
+    if (
+      (selected < 0 && (onSelectMatch || onSelectMatchLongPress)) ||
+      (selected >= 0 && (onSelectTeam || onSelectTeamLongPress))
+    )
+      if (currentlyTappedMatch) {
+        setTappedMatch({
+          key: matchKeyCreator(currentlyTappedMatch[1]),
+          selected,
+        });
+      } else handleSvgPressOut();
   };
 
   const handleSvgPressOut = () => {
